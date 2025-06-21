@@ -1,16 +1,16 @@
-# 🔒 Pwned Password Checker (CLI)
+# 🔒 Pwned Password Checker (`checkmypass.py`)
 
-This Python script checks if one or more passwords have been **compromised in known data breaches**, using the [Have I Been Pwned API](https://haveibeenpwned.com/API/v3#PwnedPasswords).
-It uses **SHA-1 hashing + k-anonymity** to protect your passwords while querying the API.
+This Python script checks if your password(s) have appeared in known data breaches, using the [Have I Been Pwned](https://haveibeenpwned.com/) API.
+It follows the **k-anonymity** model, sending only part of your hashed password to keep your data secure.
 
 ---
 
 ## 🛠️ Features
 
-* Uses the **Pwned Passwords API** securely
-* Protects privacy: only the first 5 characters of the hash are sent
-* Tells you how many times each password was leaked
-* Simple CLI usage – pass multiple passwords as arguments
+* Queries the Pwned Passwords API using SHA-1 and k-anonymity
+* Checks multiple passwords via command line
+* Reports how many times each password was leaked
+* Privacy-respecting: your full password or full hash is **never sent**
 
 ---
 
@@ -19,7 +19,7 @@ It uses **SHA-1 hashing + k-anonymity** to protect your passwords while querying
 * Python 3.x
 * `requests` library
 
-Install the required package:
+Install the dependency:
 
 ```bash
 pip install requests
@@ -32,13 +32,13 @@ pip install requests
 Run the script from the command line:
 
 ```bash
-python pwned_password_checker.py <password1> <password2> ...
+python checkmypass.py <password1> <password2> ...
 ```
 
 ### Example:
 
 ```bash
-python pwned_password_checker.py 123456 password qwerty
+python checkmypass.py 123456 password myS3cret
 ```
 
 ### Output:
@@ -46,42 +46,23 @@ python pwned_password_checker.py 123456 password qwerty
 ```
 123456 was found 2389473 times...you should change your password
 password was found 3452891 times...you should change your password
-qwerty was found 982374 times...you should change your password
-```
-
-If a password is not found:
-
-```
-myS3cretPass was NOT found. Carry on!
+myS3cret was NOT found. Carry on!
 ```
 
 ---
 
-## 🔐 How It Works
+## 🔍 How It Works
 
-1. The password is hashed using SHA-1.
-2. Only the **first 5 characters** of the hash are sent to the API.
-3. The API returns a list of matching hashes and breach counts.
-4. Your script checks if the **tail of your hash** is in the list.
-5. If found, it tells you how many times that password has appeared in breaches.
-
----
-
-## ⚠️ Disclaimer
-
-This script is for **educational and security-awareness purposes only**.
-Avoid running it with real passwords on untrusted systems.
+1. Each password is hashed using **SHA-1**.
+2. The first 5 characters of the hash are sent to the API.
+3. The API responds with all hashes starting with those 5 characters.
+4. The script checks if the full hash (via its tail) is in the response.
+5. If matched, it reports how many times that password was exposed.
 
 ---
 
-## 📄 License
+## ⚠️ Security Notice
 
-MIT License – [See LICENSE](LICENSE)
+This script is **for learning and personal use**.
+Do **not use real passwords** on shared or public machines.
 
----
-
-Let me know if you'd like:
-
-* A `.gitignore` file
-* A `requirements.txt`
-* Instructions for packaging it as a CLI tool (`setup.py`)
